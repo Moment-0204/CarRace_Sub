@@ -107,8 +107,23 @@ int main() {
         if (ans != 0) {
             j = rcv_data[0] * 256 + rcv_data[1];
             i = rcv_data[2] * 256 + rcv_data[3];
-            if(rcv_data[4]==1)tmadd(1);
-            else if(rcv_data[4]==46)clear();
+            if (rcv_data[4] == 1)tmadd(1);
+            else if (rcv_data[4] == 46)clear();
+            if (rcv_data[5] == 1) {
+                PR2 = 80;
+                CCPR2L = PR2 / 2;
+                TMR2ON = 1;
+            } else if (rcv_data[5] == 2) {
+                PR2 = 120;
+                CCPR2L = PR2 / 2;
+                TMR2ON = 1;
+            } else if (rcv_data[5] == 3) {
+                PR2 = 150;
+                CCPR2L = PR2 / 2;
+                TMR2ON = 1;
+            } else {
+                TMR2ON = 0;
+            }
             //else tmadd(0);
         } else {
         }
@@ -134,7 +149,19 @@ void setup() {
     TRISB = 0x00;
     TRISC = 0b00011000;
 
+    PSTR2CON = 0b00000001;
+
     OPTION_REG = 0b00000111;
+    CCP2CON = 0b00001100;
+    CCPTMRS0 = 0x00;
+    CCPTMRS1 = 0x00;
+    T2CON = 0b00000011;
+    PR2 = 100;
+    CCPR2L = PR2 / 2;
+    TMR2 = 0;
+    TMR2ON = 1;
+
+
     TMR0 = 0;
     T0IF = 0;
     T0IE = 1;
@@ -204,9 +231,9 @@ void show(short data, short data2) {
     return;
 }
 
-void clear(){
-    for(int i=0; i<10; i++)tmadd(0);
-    j=0;
-    
+void clear() {
+    for (int i = 0; i < 10; i++)tmadd(0);
+    j = 0;
+
     return;
 }
